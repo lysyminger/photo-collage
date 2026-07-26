@@ -1,0 +1,14 @@
+{
+  "name": "collage-demo-gif",
+  "private": true,
+  "description": "用 Remotion 渲染 README 演示 GIF",
+  "scripts": {
+    "render": "remotion render src/index.ts CollageDemo ../docs/demo.gif --codec=gif --every-nth-frame=2"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.0"
+  }
+}

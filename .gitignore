@@ -1,6 +1,9 @@
 # 本地测试用素材
 _test/
 
+# Remotion 渲染工程依赖
+remotion/node_modules/
+
 # 系统文件
 Thumbs.db
 .DS_Store

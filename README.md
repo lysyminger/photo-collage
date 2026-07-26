@@ -6,6 +6,8 @@ A zero-dependency, browser-only photo collage tool for photographers. Mix landsc
 
 **🔗 在线体验 / Live demo: <https://lysyminger.github.io/photo-collage/>**
 
+![演示动画](docs/demo.gif)
+
 ![界面截图](docs/screenshot.png)
 
 ## 使用
