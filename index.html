@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自由拼图 · 摄影师版</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='4' width='17' height='13' rx='2.5' fill='%235b7cfa'/%3E%3Crect x='13' y='11' width='17' height='17' rx='2.5' fill='%23e8eaef'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<aside>
+  <header class="brand">
+    <div class="brand-mark" aria-hidden="true"></div>
+    <div>
+      <h1>自由拼图</h1>
+      <p class="sub">照片不离开本机 · 原画质导出</p>
+    </div>
+  </header>
+
+  <section>
+    <h2>画布</h2>
+    <div class="row">
+      <select id="preset">
+        <option value="">自定义尺寸</option>
+        <option value="2160x2160">1:1 方形 (2160×2160)</option>
+        <option value="1620x2160">3:4 竖版·小红书 (1620×2160)</option>
+        <option value="2160x1620">4:3 横版 (2160×1620)</option>
+        <option value="1215x2160">9:16 竖屏 (1215×2160)</option>
+        <option value="2160x1215">16:9 横屏 (2160×1215)</option>
+        <option value="2480x3508">A4 竖版 300dpi (2480×3508)</option>
+      </select>
+    </div>
+    <div class="row">
+      <label for="cw">宽</label><input type="number" id="cw" value="2160" min="100" max="10000">
+      <label for="ch" class="mid">高</label><input type="number" id="ch" value="1620" min="100" max="10000">
+    </div>
+    <div class="row">
+      <label>底色</label><input type="color" id="bg" value="#ffffff">
+      <div id="swatches"></div>
+    </div>
+    <div class="btn-half">
+      <button id="bgImgBtn">背景图…</button>
+      <button id="bgImgClear" disabled>移除背景图</button>
+    </div>
+    <input type="file" id="bgFile" accept="image/*" hidden>
+    <div class="row" id="blurRow" style="display:none">
+      <label>模糊</label><input type="range" id="bgBlur" min="0" max="60" value="20">
+      <span id="bgBlurV" class="v">20</span>
+    </div>
+    <button id="fitH">高度适应内容</button>
+  </section>
+
+  <section>
+    <h2>图片</h2>
+    <button class="primary" id="addBtn">＋ 添加图片</button>
+    <input type="file" id="file" accept="image/*" multiple hidden>
+    <button id="autoBtn">✦ 自动排列</button>
+    <div class="btn-half">
+      <button id="undoBtn" disabled>↩ 撤销</button>
+      <button id="redoBtn" disabled>↪ 重做</button>
+    </div>
+    <div class="row">
+      <label>间距</label><input type="range" id="gap" min="0" max="120" value="24">
+      <span id="gapV" class="v">24</span>
+    </div>
+    <div class="row">
+      <label>边距</label><input type="range" id="margin" min="0" max="200" value="0">
+      <span id="marginV" class="v">0</span>
+    </div>
+    <label class="check"><input type="checkbox" id="autoOnAdd" checked>添加后自动排列</label>
+    <div id="layerList"></div>
+    <p class="hint">也可以直接把照片拖进右侧画布</p>
+  </section>
+
+  <section>
+    <h2>整体样式</h2>
+    <div class="row">
+      <label>白边</label><input type="range" id="border" min="0" max="80" value="0">
+      <span id="borderV" class="v">0</span>
+    </div>
+    <div class="row">
+      <label>圆角</label><input type="range" id="radius" min="0" max="120" value="0">
+      <span id="radiusV" class="v">0</span>
+    </div>
+    <div class="row">
+      <label>边色</label><input type="color" id="borderColor" value="#ffffff">
+      <label class="check inline"><input type="checkbox" id="shadowOn">阴影</label>
+    </div>
+  </section>
+
+  <section>
+    <h2>选中图层</h2>
+    <div class="btn-half">
+      <button id="upBtn" disabled>置顶</button>
+      <button id="downBtn" disabled>置底</button>
+    </div>
+    <div class="btn-half">
+      <button id="resetBtn" disabled>重置裁切</button>
+      <button id="delBtn" class="danger" disabled>删除</button>
+    </div>
+    <div class="row">
+      <label>圆角</label><input type="range" id="lRadius" min="0" max="200" value="0" disabled>
+      <span id="lRadiusV" class="v">–</span>
+    </div>
+    <div class="row">
+      <label>透明</label><input type="range" id="lOpacity" min="20" max="100" value="100" disabled>
+      <span id="lOpacityV" class="v">–</span>
+    </div>
+    <div class="row">
+      <label class="check inline"><input type="checkbox" id="lReflect" disabled>倒影</label>
+      <button id="lStyleReset" class="slim" disabled>恢复默认样式</button>
+    </div>
+    <button id="panModeBtn">✥ 框内构图模式：关</button>
+    <p class="hint">拖<b>角</b>＝等比缩放，拖<b>边</b>＝裁切构图<br>
+    <b>双击</b>＝照片铺满当前框，<b>Alt+拖</b>＝框内移动画面<br>
+    （手机上用「框内构图模式」代替 Alt）<br>
+    <b>Ctrl+点</b>＝多选 · 空白处拖拽＝框选（Shift 追加）<br>
+    方向键微调 · Tab 切换 · Ctrl+A 全选 · Ctrl+Z 撤销</p>
+  </section>
+
+  <section>
+    <h2>导出</h2>
+    <div class="row">
+      <label>格式</label>
+      <select id="fmt"><option value="jpg">JPG</option><option value="png">PNG</option></select>
+      <select id="mult"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option></select>
+    </div>
+    <div class="row" id="qRow">
+      <label>质量</label><input type="range" id="quality" min="60" max="100" value="92">
+      <span id="qV" class="v">92</span>
+    </div>
+    <button class="primary" id="exportBtn">导出图片</button>
+    <p class="hint" id="expSize"></p>
+  </section>
+</aside>
+
+<main id="stage">
+  <div id="empty-tip">
+    <div class="drop-frame">
+      <span class="big">把照片拖进来</span>
+      <span>或点左侧「添加图片」——横图竖图混着来，随意拼</span>
+    </div>
+  </div>
+  <canvas id="cv"></canvas>
+  <div id="stat"></div>
+</main>
+<div id="toast" role="status"></div>
+
+<script src="js/core.js"></script>
+<script src="js/render.js"></script>
+<script src="js/interact.js"></script>
+<script src="js/ui.js"></script>
+</body>
+</html>

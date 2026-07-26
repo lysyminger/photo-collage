@@ -1,0 +1,6 @@
+# 本地测试用素材
+_test/
+
+# 系统文件
+Thumbs.db
+.DS_Store
